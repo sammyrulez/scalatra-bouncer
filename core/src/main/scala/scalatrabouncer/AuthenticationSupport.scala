@@ -39,6 +39,30 @@ trait AuthenticationSupport extends ScalatraBase with ScentrySupport[User] {
      }
      
   }
+  
+  protected def checkAnyRole(roles:List[String]) = {
+     if(!isAuthenticated) {       
+      redirect(scentryConfig.login)
+     }
+     val inters = scentry.userOption.get.roles().intersect(roles)
+     if(inters.length == 0){
+       redirect(scentryConfig.login)
+     }
+     
+  }
+  
+  protected def checkAllRole(roles:List[String]) = {
+     if(!isAuthenticated) {       
+      redirect(scentryConfig.login)
+     }
+     val roleSet = collection.SortedSet.empty[String] ++ roles
+     val userRoleSet = collection.SortedSet.empty[String] ++ scentry.userOption.get.roles()
+     val isSubset = roleSet.subsetOf(userRoleSet)
+     if(!isSubset){
+       redirect(scentryConfig.login)
+     }
+     
+  }
 
 
   override protected def configureScentry = {
