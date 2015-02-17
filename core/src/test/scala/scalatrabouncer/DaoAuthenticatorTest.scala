@@ -51,5 +51,13 @@ class DaoAuthenticatorTest extends Specification with Mockito{
       }
       
   }
+  
+  "A SaltedUser "  should {
+    "encrypt passwords" in {
+    
+      val user = SaltedUser.apply("foo", "bar")
+      user.password  mustNotEqual "bar"    
+    }
+  }
 
 }
