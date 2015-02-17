@@ -20,7 +20,7 @@ class DummyAuthenticator extends Authenticator{
 class DummyUserDetailsTrait extends UserDetailsTrait {
   
    def loadUser(username:String):Either[String,User] = {
-     Right(new UserWithPassword("foo","foo"))
+     Right(new UserWithPassword("foo","foo", List[String]()))
    }
   
 }
@@ -37,7 +37,7 @@ class UserPasswordStrategyTest extends Specification with Mockito {
            val app:ScalatraBase =  mock[ScalatraBase]
            val strategy = new UserPasswordStrategy(app,new DummyAuthenticator,new DummyUserDetailsTrait )
            val user = strategy.authenticate()
-           val check:User = user getOrElse new UserWithPassword("","")
+           val check:User = user getOrElse new UserWithPassword("","", List[String]())
            check.username() mustEqual "foo"
            
       }

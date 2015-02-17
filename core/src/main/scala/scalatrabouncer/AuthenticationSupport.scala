@@ -28,6 +28,17 @@ trait AuthenticationSupport extends ScalatraBase with ScentrySupport[User] {
       redirect(scentryConfig.login)
     }
   }
+  
+  protected def checkRole(role:String) = {
+     if(!isAuthenticated) {       
+      redirect(scentryConfig.login)
+     }
+    
+     if(!scentry.userOption.get.roles().contains(role)){
+       redirect(scentryConfig.login)
+     }
+     
+  }
 
 
   override protected def configureScentry = {

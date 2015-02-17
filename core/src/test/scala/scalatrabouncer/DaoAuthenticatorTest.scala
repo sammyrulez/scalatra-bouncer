@@ -13,6 +13,8 @@ class DummyUserDao extends UserDao {
     val encryptedPsw:String = "bar".bcrypt(salt)
     new SaltedUser(id, encryptedPsw,salt)
   }
+  
+  def userRoles(id:String):List[String] = List[String]()
 }
 
 class DummyDaoAuthenticator extends DaoAuthenticator {
