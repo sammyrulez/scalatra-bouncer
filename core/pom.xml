@@ -62,27 +62,10 @@
 					</includes>
 				</configuration>
 			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<format>html</format>
-					<format>xml</format>
-					<maxmem>256m</maxmem>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eluder.coveralls</groupId>
-				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>3.0.1</version>
-				<configuration>
-					<repoToken>${env.COVERALL_TOKEN}</repoToken>
-				</configuration>
-			</plugin>
+			
 		</plugins>
 	</build>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.specs2</groupId>
@@ -94,11 +77,19 @@
 					<groupId>org.scalaz.stream</groupId>
 				</exclusion>
 			</exclusions>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.scalatra</groupId>
+			<artifactId>scalatra-specs2_2.10</artifactId>
+			<version>2.3.0</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.scalatra</groupId>
