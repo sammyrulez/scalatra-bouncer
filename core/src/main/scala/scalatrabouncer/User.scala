@@ -7,6 +7,6 @@ trait User {
   
 }
 
-class UserWithPassword(val username:String,val password:String,val roles: List[String]) extends User{
+class SimpleUser(val username:String,val roles: List[String]) extends User{
   
 }

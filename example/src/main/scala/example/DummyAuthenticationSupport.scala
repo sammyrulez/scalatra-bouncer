@@ -4,7 +4,7 @@ import scalatrabouncer.AuthenticationSupport
 import scalatrabouncer.Authenticator
 import javax.servlet.http.HttpServletRequest
 import scalatrabouncer.UserDetailsTrait
-import scalatrabouncer.{User,UserWithPassword}
+import scalatrabouncer.{User,SimpleUser}
 
 
 class DummyAuthenticator extends Authenticator{
@@ -18,7 +18,7 @@ class DummyAuthenticator extends Authenticator{
 class DummyUserDetailsTrait extends UserDetailsTrait {
   
    def loadUser(username:String):Either[String,User] = {
-     Right(new UserWithPassword("foo","foo",List[String]()))
+     Right(new SimpleUser("foo",List[String]()))
    }
   
 }
