@@ -85,18 +85,7 @@ class UserDaoDb(val driver: JdbcProfile, val db: Database) extends UserDao {
 
 }
 
-//The main application
-object HelloSlick extends App {
-  val db = Database.forURL("jdbc:h2:mem:hello;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
 
-  import scala.slick.driver.H2Driver
-  val dao: UserDaoDb = new UserDaoDb(H2Driver, db)
-
-  dao.createDb()
-  val adminUsr = dao.loadUser("admin")
-  dao.userRoles("admin").map(print(_))
-
-}
   
 
   
