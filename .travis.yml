@@ -1,5 +1,5 @@
 language: java
-script: mvn cobertura:cobertura 
-#env:
-#  global:
-#    secure: ejCCCv9FmstaTPuAtFH0dKgXqJDiR1W6QRlY5LFxAweqEX3OqiqMGHN820kFIdRwGpIv9zjU/0aYG731yAqH/CKcRmIe23ECsN4h4AgV0gLbKAs0yYFR8TkvIjfIycRLAxu/3FclBuDkowYn1zad1dLX4X5aGcg5GYRfejkZDtc=
+script: mvn clean cobertura:cobertura coveralls:report
+env:
+  global:
+    secure: NJKge0ODVGvFr+CvHuIJhCGChUEK+lkCJ1WGKK7VsQYm+N+bqYadM1G/n9tjaBrAMkcuYbkfL5bp/AEcJNXcC+w8KOyoH5DeoJAf08XskkuuWY8+SIM/6WzW3vBsjRXXuoS0d3mCMQEGA7mWRoCh3oZWzdwGF/x+J1sbUTTwX0s=
