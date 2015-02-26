@@ -16,6 +16,11 @@ trait UserDao {
   
   def loadUser(id:String):SaltedUser
   
-  def userRoles(id:String):List[String]
+  def userRoles(id:String):List[String]  
 
+}
+
+trait ProfiledUserDao[A] extends UserDao {
+  
+  def loadUserDetails(id:String):ProfiledUser[A]
 }

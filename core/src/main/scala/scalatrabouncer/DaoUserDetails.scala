@@ -1,12 +1,21 @@
 package scalatrabouncer
 
-trait DaoUserDetails extends UserDetailsTrait{
+trait DaoUserDetails[A] extends UserDetailsTrait{
   
   
-   def dao():UserDao
+   def dao():ProfiledUserDao[A]
   
-   def loadUser(username:String):Either[String,User] = {
-      Right(new SimpleUser(dao().loadUser(username).username,dao().userRoles(username))) //TODO
+   def loadUser(username:String):Either[String,ProfiledUser[A]] = {
+     try{
+       val pUser = dao().loadUserDetails(username)
+       Right(pUser)
+     }catch{
+       case e: Exception =>  Left(e.getMessage)
+       case _ => Left("Error loading user details")
+     }
+     
+     
+     
    }
 
 }

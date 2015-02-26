@@ -7,6 +7,12 @@ trait User {
   
 }
 
+trait ProfiledUser[A] extends User {
+  
+  def profile():A
+  
+}
+
 class SimpleUser(val username:String,val roles: List[String]) extends User{
   
 }
