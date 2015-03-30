@@ -11,7 +11,7 @@ trait DaoUserDetails[A] extends UserDetailsTrait{
        Right(pUser)
      }catch{
        case e: Exception =>  Left(e.getMessage)
-       case _ => Left("Error loading user details")
+       case _: Throwable  => Left("Catastrophic Error loading user details")
      }
      
      
