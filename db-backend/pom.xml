@@ -97,11 +97,20 @@
 			<scope>test</scope>
 		</dependency>
 
+
 		<dependency>
 			<groupId>org.scalikejdbc</groupId>
 			<artifactId>scalikejdbc_2.10</artifactId>
 			<version>2.2.6</version>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.12</version>
+			<scope>test</scope>
+		</dependency>
+
+
 
 
 
