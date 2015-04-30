@@ -52,6 +52,15 @@ class DaoDbTest extends Specification with Before {
 
     }
 
+    " Change password in db" in {
+      val userIn = new SaltedUser("admin","x","x")
+      dao.changePassword(userIn)
+      val user = dao.loadUser("admin")
+      val testUser  = user.getOrElse(new SaltedUser("","",""))
+      testUser.password mustEqual "x"
+
+    }
+
 
   }
 

@@ -97,6 +97,9 @@ class UserDaoDb()(implicit session:DBSession) extends UserDao {
     return true
   }
 
+  def changePassword(saltedUser: SaltedUser) = {
+    sql"update  USERS_DATA SET PASSWORD_DATA = ${saltedUser.password}, SALT = ${saltedUser.salt}  where USERNAME = ${saltedUser.username} ".update.apply()
+  }
 
 
 
