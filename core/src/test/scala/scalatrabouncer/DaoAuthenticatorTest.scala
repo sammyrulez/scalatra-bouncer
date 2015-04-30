@@ -8,10 +8,8 @@ import org.specs2.mock.Mockito
 import javax.servlet.http.HttpServletRequest
 
 class DummyUserDao extends UserDao {
-  def loadUser(id:String):SaltedUser = {
-    val salt = generateSalt
-    val encryptedPsw:String = "bar".bcrypt(salt)
-    new SaltedUser(id, encryptedPsw,salt)
+  def loadUser(id:String):Option[SaltedUser] = {
+    Option(SaltedUser(id, "bar"))
   }
   
   def userRoles(id:String):List[String] = List[String]()

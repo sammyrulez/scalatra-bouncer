@@ -10,7 +10,8 @@ trait DaoAuthenticator extends Authenticator{
   
   def authenticateRequest(request:HttpServletRequest):Either[String,Any] = {
     val user = dao.loadUser(request.getParameter("login"))
-    checkPassword(user,request.getParameter("password"))
+    val userData = user.getOrElse(return Left("User not found"))
+    checkPassword(userData,request.getParameter("password"))
     
     
   }

@@ -98,10 +98,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.typesafe.slick</groupId>
-			<artifactId>slick_2.10</artifactId>
-			<version>2.1.0</version>
+			<groupId>org.scalikejdbc</groupId>
+			<artifactId>scalikejdbc_2.10</artifactId>
+			<version>2.2.6</version>
 		</dependency>
+
+
 
 
 	</dependencies>

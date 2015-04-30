@@ -2,86 +2,52 @@ package scalatrabouncer.db
 
 import scalatrabouncer.UserDao
 import scalatrabouncer.SaltedUser
-import scala.slick.driver.JdbcProfile
-import scala.slick.jdbc.JdbcBackend.Database
-import scala.slick.lifted.{ ProvenShape, ForeignKeyQuery }
+import scalikejdbc._
 
-class UserDaoDb(val driver: JdbcProfile, val db: Database) extends UserDao {
 
-  import driver.simple._
+class DbUser(val username:String,val password:String,val salt:String)
 
-  class Users(tag: Tag)
-    extends Table[(String, String, String)](tag, "USERS") {
-    def username: Column[String] = column[String]("USER_NAME", O.PrimaryKey)
-    def password: Column[String] = column[String]("PASSWORD_DATA")
-    def salt: Column[String] = column[String]("SALT")
-    def * : ProvenShape[(String, String, String)] =
-      (username, password, salt)
+object DbUser extends SQLSyntaxSupport[DbUser] {
+  override val tableName = "USERS_DATA"
+  def apply(rs: WrappedResultSet) = new DbUser(
+    rs.string("USERNAME"), rs.string("PASSWORD_DATA"), rs.string("SALT"))
+}
 
-  }
+object UserDaoDb {
 
-  class Roles(tag: Tag)
-    extends Table[(String, String)](tag, "ROLES") {
-    def name: Column[String] = column[String]("ROLE_NAME", O.PrimaryKey)
-    def description: Column[String] = column[String]("ROLE_DESCR")
+  def createDb(implicit session:DBSession)={
+    sql"""
+create table USERS_DATA (
+  USERNAME varchar(64) not null primary key,
+  PASSWORD_DATA varchar(128),
+  SALT varchar(128) not null
+)
+      """.execute.apply()
+}
+}
 
-    def * : ProvenShape[(String, String)] =
-      (name, description)
-  }
+class UserDaoDb()(implicit session:DBSession) extends UserDao {
 
-  class Permissions(tag: Tag)
-    extends Table[(String, String)](tag, "PERMISSIONS") {
-    def roleName: Column[String] = column[String]("ROLE_NAME")
-    def username: Column[String] = column[String]("USER_NAME")
-    def roleFK = foreignKey("role_fk", roleName, TableQuery[Roles])(a => a.name)
-    def userFK = foreignKey("user_fk", username, TableQuery[Users])(a => a.username)
-    def * : ProvenShape[(String, String)] =
-      (roleName, username)
-  }
+  def loadUser(id:String):Option[SaltedUser] = {
+    val m = DbUser.syntax("m")
+    val user: Option[DbUser] = withSQL {
+      select.from(DbUser as m).where.eq(m.username, id)
+    }.map(rs => DbUser(rs)).single.apply()
 
-  val users: TableQuery[Users] = TableQuery[Users]
-  val permissions: TableQuery[Permissions] = TableQuery[Permissions]
-  val roles: TableQuery[Roles] = TableQuery[Roles]
-
-  def loadUser(id: String) = {
-    db withSession { implicit session =>
-      loadUserFromDb(id)
-    }
-  }
-  def userRoles(id: String): List[String] = {
-    db withSession { implicit session =>
-      userRolesFromDb(id)
-    }
-  }
-
-  def loadUserFromDb(id: String)(implicit session: Session): SaltedUser = {
-
-    val filterQuery: Query[Users, (String, String, String), Seq] = users.filter(_.username === id)
-    val record = filterQuery.list.head
-    new SaltedUser(record._1, record._2, record._3)
+   val userData = user.getOrElse(return None)
+   return Option(new SaltedUser(userData.username,userData.password,userData.salt) )
 
   }
 
-  def userRolesFromDb(id: String)(implicit session: Session): List[String] = {
-
-    val filterQuery: Query[Permissions, (String, String), Seq] = permissions.filter(_.username === id)
-    filterQuery.list.map(_._1)
-
+  def userRoles(id:String):List[String] = {
+    return List()
   }
 
-  def createDb() = {
-    db withSession { implicit session =>
-      (users.ddl ++ permissions.ddl ++ roles.ddl).create
-      val user = SaltedUser.apply("admin", "admin")
-      val usersInsertResult: Option[Int] = users ++= Seq(
-        (user.username, user.password, user.salt))
-      val rolesInsertResult: Option[Int] = roles ++= Seq(
-        ("USER_ADMIN", "Admin for users"))
-      val permissionsInsertResult: Option[Int] = permissions ++= Seq(
-        ("USER_ADMIN", user.username))
-    }
-
+  def createUser(saltedUser: SaltedUser) = {
+    sql"insert into USERS_DATA (USERNAME, PASSWORD_DATA,SALT) values (${saltedUser.username}, ${saltedUser.password},${saltedUser.salt})".update.apply()
   }
+
+
 
 }
 
