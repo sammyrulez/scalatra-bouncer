@@ -23,6 +23,13 @@ create table USERS_DATA (
   SALT varchar(128) not null
 )
       """.execute.apply()
+
+    sql"""
+create table PERMISSIONS (
+  USERNAME varchar(64) not null primary key,
+  ROLE varchar(128) not null
+)
+      """.execute.apply()
 }
 }
 
@@ -40,11 +47,19 @@ class UserDaoDb()(implicit session:DBSession) extends UserDao {
   }
 
   def userRoles(id:String):List[String] = {
-    return List()
+    val roles: List[String] = sql"select * from PERMISSIONS where USERNAME = ${id}".map(_.string("ROLE")).list.apply()
+    return roles
   }
 
-  def createUser(saltedUser: SaltedUser) = {
+  def createUser(saltedUser: SaltedUser, roles:List[String]) = {
     sql"insert into USERS_DATA (USERNAME, PASSWORD_DATA,SALT) values (${saltedUser.username}, ${saltedUser.password},${saltedUser.salt})".update.apply()
+    //TODO check that the role exeists
+    roles.foreach(role =>
+    {
+      sql"insert into PERMISSIONS (USERNAME,ROLE) values (${saltedUser.username},${role})".update.apply()
+    }
+    )
+
   }
 
 
