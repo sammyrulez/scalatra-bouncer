@@ -62,11 +62,30 @@ class UserDaoDb()(implicit session:DBSession) extends UserDao {
     sql"insert into USERS_DATA (USERNAME, PASSWORD_DATA,SALT) values (${saltedUser.username}, ${saltedUser.password},${saltedUser.salt})".update.apply()
     roles.foreach(role =>
     {
-      if(checkRole(role))
-        sql"insert into PERMISSIONS (USERNAME,ROLE) values (${saltedUser.username},${role})".update.apply()
+      addRoleToUser(saltedUser, role)
     }
     )
 
+  }
+
+  private def addRoleToUser(saltedUser: SaltedUser, role: String): AnyVal = {
+    if (checkRole(role))
+      sql"insert into PERMISSIONS (USERNAME,ROLE) values (${saltedUser.username},${role})".update.apply()
+  }
+  private def removeRoleToUser(saltedUser: SaltedUser, role: String): AnyVal = {
+    if (checkRole(role))
+      sql"delete from PERMISSIONS  where USERNAME = ${saltedUser.username} and ROLE = ${role}".update.apply()
+  }
+
+  def addPermission(saltedUser: SaltedUser,role:String) = {
+    if(!userRoles(saltedUser.username).contains(role)){
+      addRoleToUser(saltedUser,role)
+    }
+  }
+  def removePermission(saltedUser: SaltedUser,role:String) = {
+    if(userRoles(saltedUser.username).contains(role)){
+      removeRoleToUser(saltedUser,role)
+    }
   }
 
   def createRole(role:String) = {

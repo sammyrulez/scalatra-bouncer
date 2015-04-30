@@ -18,6 +18,7 @@ class DaoDbTest extends Specification with Before {
 
   val dao = new UserDaoDb()
   dao.createRole("ADMIN")
+  dao.createRole("DUMMY")
   dao.createUser(new SaltedUser("admin","a","b"),List("ADMIN"))
 
 
@@ -39,6 +40,16 @@ class DaoDbTest extends Specification with Before {
         val roles = dao.userRoles("admin")
         roles.size mustEqual 1
         roles.contains("ADMIN")
+    }
+    " Add roles to db " in {
+      val user = dao.loadUser("admin")
+      dao.addPermission(user.get,"DUMMY")
+      val extraRoles = dao.userRoles("admin")
+      extraRoles.size mustEqual 2
+      dao.removePermission(user.get,"DUMMY")
+      val stdRoles = dao.userRoles("admin")
+      stdRoles.size mustEqual 1
+
     }
 
 
