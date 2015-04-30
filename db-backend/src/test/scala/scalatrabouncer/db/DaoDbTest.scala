@@ -17,8 +17,9 @@ class DaoDbTest extends Specification with Before {
   UserDaoDb.createDb(session)
 
   val dao = new UserDaoDb()
-
+  dao.createRole("ADMIN")
   dao.createUser(new SaltedUser("admin","a","b"),List("ADMIN"))
+
 
   def before() = {
 
