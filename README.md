@@ -1,6 +1,10 @@
 Scalatra Bouncer
 ================
 
+[![Build Status](https://travis-ci.org/sammyrulez/scalatra-bouncer.svg?branch=master)](https://travis-ci.org/sammyrulez/scalatra-bouncer)
+[![Coverage Status](https://coveralls.io/repos/sammyrulez/scalatra-bouncer/badge.svg?branch=master)](https://coveralls.io/r/sammyrulez/scalatra-bouncer?branch=master)
+
+
 Scalatra Bouncer is a authentication / authorization library for Scalatra
 
 ### Installation
