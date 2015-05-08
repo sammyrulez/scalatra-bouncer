@@ -145,6 +145,17 @@ create table USERS_META_DATA (
 
     }
 
+    def persistDetails(id:String, data:Map[String, String]):Unit = {
+        //  transaction {
+
+      data.foreach{k =>
+        sql"delete from USERS_META_DATA  where USERNAME = ${id} and KEY = ${k._1}".update.apply()
+        sql"insert into USERS_META_DATA (USERNAME,KEY,VALUE) values (${id},${k._1},${k._2})".update.apply()
+      }
+
+        //  }
+    }
+
 
 }
 

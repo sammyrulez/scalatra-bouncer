@@ -1,4 +1,5 @@
 package scalatrabouncer.db
+
 import org.specs2.mutable.Specification
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
@@ -19,11 +20,10 @@ class DaoDbTest extends Specification with Before {
   val dao = new UserDaoDb()
   dao.createRole("ADMIN")
   dao.createRole("DUMMY")
-  dao.createUser(new SaltedUser("admin","a","b"),List("ADMIN"))
+  dao.createUser(new SaltedUser("admin", "a", "b"), List("ADMIN"))
 
   ProfiledUserMetaDaoDb.createDb
   val metaDao = new ProfiledUserMetaDaoDb()
-
 
 
   def before() = {
@@ -35,32 +35,32 @@ class DaoDbTest extends Specification with Before {
     " load user from db " in {
 
       val user = dao.loadUser("admin")
-      val testUser  = user.getOrElse(new SaltedUser("","",""))
+      val testUser = user.getOrElse(new SaltedUser("", "", ""))
       testUser.username mustEqual "admin"
 
 
     }
     " load roles from db " in {
-        val roles = dao.userRoles("admin")
-        roles.size mustEqual 1
-        roles.contains("ADMIN")
+      val roles = dao.userRoles("admin")
+      roles.size mustEqual 1
+      roles.contains("ADMIN")
     }
     " Add roles to db " in {
       val user = dao.loadUser("admin")
-      dao.addPermission(user.get,"DUMMY")
+      dao.addPermission(user.get, "DUMMY")
       val extraRoles = dao.userRoles("admin")
       extraRoles.size mustEqual 2
-      dao.removePermission(user.get,"DUMMY")
+      dao.removePermission(user.get, "DUMMY")
       val stdRoles = dao.userRoles("admin")
       stdRoles.size mustEqual 1
 
     }
 
     " Change password in db" in {
-      val userIn = new SaltedUser("admin","x","x")
+      val userIn = new SaltedUser("admin", "x", "x")
       dao.changePassword(userIn)
       val user = dao.loadUser("admin")
-      val testUser  = user.getOrElse(new SaltedUser("","",""))
+      val testUser = user.getOrElse(new SaltedUser("", "", ""))
       testUser.password mustEqual "x"
 
     }
@@ -70,9 +70,16 @@ class DaoDbTest extends Specification with Before {
 
   "A profile dao" should {
     "load metadata from db" in {
-      val profile:ProfiledUser[Map[String, String]] = metaDao.loadUserDetails("admin")
+      val profile: ProfiledUser[Map[String, String]] = metaDao.loadUserDetails("admin")
       profile.profile().size mustEqual 0
 
+    }
+
+    "persist profile " in {
+      val profileData = Map("email" -> "none@upsala.it")
+      metaDao.persistDetails("admin", profileData)
+      val profile: ProfiledUser[Map[String, String]] = metaDao.loadUserDetails("admin")
+      profile.profile().size mustEqual 1
 
 
     }
