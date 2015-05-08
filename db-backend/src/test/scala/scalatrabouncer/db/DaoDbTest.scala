@@ -6,7 +6,7 @@ import scalikejdbc.{ConnectionPool, AutoSession}
 
 import org.specs2.mutable.Before
 
-import scalatrabouncer.SaltedUser
+import scalatrabouncer.{ProfiledUser, SaltedUser}
 
 @RunWith(classOf[JUnitRunner])
 class DaoDbTest extends Specification with Before {
@@ -14,12 +14,16 @@ class DaoDbTest extends Specification with Before {
   implicit val session = AutoSession
   Class.forName("org.h2.Driver")
   ConnectionPool.singleton("jdbc:h2:mem:hello", "user", "pass")
-  UserDaoDb.createDb(session)
+  UserDaoDb.createDb
 
   val dao = new UserDaoDb()
   dao.createRole("ADMIN")
   dao.createRole("DUMMY")
   dao.createUser(new SaltedUser("admin","a","b"),List("ADMIN"))
+
+  ProfiledUserMetaDaoDb.createDb
+  val metaDao = new ProfiledUserMetaDaoDb()
+
 
 
   def before() = {
@@ -61,6 +65,17 @@ class DaoDbTest extends Specification with Before {
 
     }
 
+
+  }
+
+  "A profile dao" should {
+    "load metadata from db" in {
+      val profile:ProfiledUser[Map[String, String]] = metaDao.loadUserDetails("admin")
+      profile.profile().size mustEqual 0
+
+
+
+    }
 
   }
 

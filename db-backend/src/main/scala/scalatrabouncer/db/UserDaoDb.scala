@@ -1,7 +1,6 @@
 package scalatrabouncer.db
 
-import scalatrabouncer.UserDao
-import scalatrabouncer.SaltedUser
+import scalatrabouncer._
 import scalikejdbc._
 
 
@@ -104,6 +103,51 @@ class UserDaoDb()(implicit session:DBSession) extends UserDao {
 
 
 }
+
+class MetaUser(usernameVal:String,userRoles:List[String],metadata:Map[String, String]) extends  User with  ProfiledUser[Map[String,String]]{
+
+
+  override def profile(): Map[String, String] = metadata
+
+  override def username(): String = usernameVal
+
+  override def roles(): List[String] = userRoles
+}
+
+
+object ProfiledUserMetaDaoDb {
+  def createDb(implicit session: DBSession) = {
+    sql"""
+create table USERS_META_DATA (
+  USERNAME varchar(64) not null ,
+  KEY varchar(128) not null,
+  VALUE varchar(128) not null
+)
+      """.execute.apply()
+
+  }
+
+}
+
+  class ProfiledUserMetaDaoDb()(implicit session:DBSession) extends UserDaoDb with ProfiledUserDao[Map[String, String]] {
+
+
+    override def loadUserDetails(id: String): ProfiledUser[Map[String, String]] = {
+
+      val metadata: Map[String, String] = sql"select * from USERS_META_DATA where USERNAME = ${id}".map(rs => (rs.string("KEY") -> rs.string("VALUE")))
+        .list().apply()
+        .groupBy(_._1)
+        .map { case (k, v) => (k, v.head._2) }
+
+
+
+      return new MetaUser(id, userRoles(id), metadata)
+
+    }
+
+
+}
+
 
 
   
