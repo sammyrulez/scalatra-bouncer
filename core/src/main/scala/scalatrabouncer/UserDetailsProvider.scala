@@ -1,6 +1,6 @@
 package scalatrabouncer
 
-trait UserDetailsTrait {
+trait UserDetailsProvider {
   
   def loadUser(username:String):Either[String,User]
 

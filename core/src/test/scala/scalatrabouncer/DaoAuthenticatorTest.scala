@@ -49,6 +49,8 @@ class DaoAuthenticatorTest extends Specification with Mockito{
       }
       
   }
+
+
   
   "A SaltedUser "  should {
     "encrypt passwords" in {

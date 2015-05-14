@@ -10,7 +10,7 @@ trait AuthenticationSupport extends ScalatraBase with ScentrySupport[User] {
   
   def loginUrl = "/login.html"
   
-  protected def userDetails:UserDetailsTrait
+  protected def userDetails:UserDetailsProvider
   protected def authenticator:Authenticator
 
   protected def fromSession = { case id: String =>  userDetails.loadUser(id).right.asInstanceOf[User] }

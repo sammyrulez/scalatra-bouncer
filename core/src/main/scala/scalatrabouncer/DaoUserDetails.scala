@@ -1,6 +1,6 @@
 package scalatrabouncer
 
-trait DaoUserDetails[A] extends UserDetailsTrait{
+trait DaoUserDetails[A] extends UserDetailsProvider{
   
   
    def dao():ProfiledUserDao[A]

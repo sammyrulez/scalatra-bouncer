@@ -5,7 +5,7 @@ import org.scalatra.auth.ScentryStrategy
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
 import org.slf4j.LoggerFactory
 
-class UserPasswordStrategy(protected val app: ScalatraBase,protected val authenticator: Authenticator,protected val userDetails:UserDetailsTrait)(implicit request: HttpServletRequest, response: HttpServletResponse) extends ScentryStrategy[User] {
+class UserPasswordStrategy(protected val app: ScalatraBase,protected val authenticator: Authenticator,protected val userDetails:UserDetailsProvider)(implicit request: HttpServletRequest, response: HttpServletResponse) extends ScentryStrategy[User] {
 
   val logger = LoggerFactory.getLogger(getClass)
 

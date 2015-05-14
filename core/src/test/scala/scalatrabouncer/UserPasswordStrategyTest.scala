@@ -17,7 +17,7 @@ class DummyAuthenticator extends Authenticator{
   
 }
 
-class DummyUserDetailsTrait extends UserDetailsTrait {
+class DummyUserDetailsTrait extends UserDetailsProvider {
   
    def loadUser(username:String):Either[String,User] = {
      Right(new SimpleUser("foo", List[String]()))

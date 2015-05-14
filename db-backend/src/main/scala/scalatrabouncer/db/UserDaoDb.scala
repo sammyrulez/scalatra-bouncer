@@ -14,6 +14,7 @@ object DbUser extends SQLSyntaxSupport[DbUser] {
 
 object UserDaoDb {
 
+
   def createDb(implicit session:DBSession)={
     sql"""
 create table USERS_DATA (
