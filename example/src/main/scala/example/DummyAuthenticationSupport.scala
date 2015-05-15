@@ -3,7 +3,7 @@ package example
 import scalatrabouncer.AuthenticationSupport
 import scalatrabouncer.Authenticator
 import javax.servlet.http.HttpServletRequest
-import scalatrabouncer.UserDetailsTrait
+import scalatrabouncer.UserDetailsProvider
 import scalatrabouncer.{User,SimpleUser}
 
 
@@ -15,7 +15,7 @@ class DummyAuthenticator extends Authenticator{
   
 }
 
-class DummyUserDetailsTrait extends UserDetailsTrait {
+class DummyUserDetailsProvider extends UserDetailsProvider {
   
    def loadUser(username:String):Either[String,User] = {
      Right(new SimpleUser("foo",List[String]()))
@@ -26,7 +26,7 @@ class DummyUserDetailsTrait extends UserDetailsTrait {
 trait DummyAuthenticationSupport extends AuthenticationSupport {
   
   override protected def authenticator = new DummyAuthenticator()
-  override protected def userDetails:UserDetailsTrait = new DummyUserDetailsTrait()
+  override protected def userDetails:UserDetailsProvider = new DummyUserDetailsProvider()
   
     
 }
